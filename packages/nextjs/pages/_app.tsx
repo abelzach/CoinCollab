@@ -52,7 +52,7 @@ const ScaffoldEthAppWithProviders = (props: AppProps) => {
   }, [isDarkMode]);
 
   return (
-    <AnonAadhaarProvider _appId="292514285978882740483995016018041437607543439360n">
+    <AnonAadhaarProvider _appId="292514285978882740483995016018041437607543439360">
     <WagmiConfig config={wagmiConfig}>
       <NextNProgress />
       <RainbowKitProvider
