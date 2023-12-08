@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
+import "./interfaces/IRoscaGroup.sol";
 
 contract RoscaManager is Ownable {
     uint256 _nextGroupId;
@@ -20,6 +21,10 @@ contract RoscaManager is Ownable {
     ) Ownable(initialOwner) {
         STABLECOIN_ADDRESS = stablecoinAddress;
         baseImplementation = baseImplementation_;
+    }
+
+    function setStablecoinAddress(address stablecoinAddress) external onlyOwner {
+        STABLECOIN_ADDRESS = stablecoinAddress;
     }
 
     function createGroup(uint256 amount, uint256 members) public {
