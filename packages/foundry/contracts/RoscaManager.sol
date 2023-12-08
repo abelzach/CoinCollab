@@ -17,11 +17,10 @@ contract RoscaManager is Ownable {
 
     constructor(
         address initialOwner,
-        address stablecoinAddress,
-        address baseImplementation_
+        address stablecoinAddress
     ) Ownable(initialOwner) {
         STABLECOIN_ADDRESS = stablecoinAddress;
-        baseImplementation = baseImplementation_;
+        baseImplementation = address(new RoscaGroup());
     }
 
     function setStablecoinAddress(address stablecoinAddress) external onlyOwner {
@@ -31,7 +30,16 @@ contract RoscaManager is Ownable {
     function createGroup(uint256 amount, uint256 members) public {
         uint256 groupId = _nextGroupId++;
         address clone = Clones.clone(baseImplementation);
+        IRoscaGroup(clone).initialize(
+            groupId,
+            amount,
+            members,
+            address(this),
+            STABLECOIN_ADDRESS,
+            owner()
+        );
         _groups[groupId] = clone;
+        emit GroupCreated(clone, msg.sender);
     }
 
     function numberOfGroups() public view returns (uint256) {
