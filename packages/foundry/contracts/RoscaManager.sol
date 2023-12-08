@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
 import "./interfaces/IRoscaGroup.sol";
+import "./RoscaGroup.sol";
 
 contract RoscaManager is Ownable {
     uint256 _nextGroupId;
