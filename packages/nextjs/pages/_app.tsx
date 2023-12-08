@@ -14,7 +14,11 @@ import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { appChains } from "~~/services/web3/wagmiConnectors";
 import "~~/styles/globals.css";
+import { AnonAadhaarProvider } from "anon-aadhaar-react";
 
+import crypto from "crypto";
+const app_id = BigInt(parseInt(crypto.randomBytes(20).toString("hex"), 16));
+console.log(app_id);
 const ScaffoldEthApp = ({ Component, pageProps }: AppProps) => {
   const price = useNativeCurrencyPrice();
   const setNativeCurrencyPrice = useGlobalState(state => state.setNativeCurrencyPrice);
@@ -48,6 +52,7 @@ const ScaffoldEthAppWithProviders = (props: AppProps) => {
   }, [isDarkMode]);
 
   return (
+    <AnonAadhaarProvider _appId="292514285978882740483995016018041437607543439360n">
     <WagmiConfig config={wagmiConfig}>
       <NextNProgress />
       <RainbowKitProvider
@@ -58,6 +63,7 @@ const ScaffoldEthAppWithProviders = (props: AppProps) => {
         <ScaffoldEthApp {...props} />
       </RainbowKitProvider>
     </WagmiConfig>
+    </AnonAadhaarProvider>
   );
 };
 
