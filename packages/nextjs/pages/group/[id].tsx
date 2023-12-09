@@ -5,80 +5,54 @@ import avatar from '../../public/avatar.png';
 import { useRouter } from 'next/router';
 import {  useAnonAadhaar } from "anon-aadhaar-react";
 import { useEffect } from "react";
-import { useContractRead } from 'wagmi'
+import { useContractRead, usePrepareContractWrite, useContractWrite } from 'wagmi';
+import { useScaffoldContractWrite } from '~~/hooks/scaffold-eth';
 import React from 'react';
 import RoscaGroup from '../../abis/RoscaGroup.json';
-let stage = 1;
 
 export default function Home() {
-  let distributionAmount = 5
+  let distributionAmount = 5;
 
   const router = useRouter();
   
-  const handleButtonClick = (groupAddress) => {
+  const handleButtonClick = (groupAddress: any) => {
     router.push(`/auction/${groupAddress}`);
   };
 
-  
-  // const { data: groupsData } = useScaffoldContractRead({
-  //   contractName: "RoscaManager",
-  //   functionName: "getOpenGroups",
-  // });
-  // console.log(groupsData);
-
   const groupAddressValue = String(router.query.id);
-  console.log(groupAddressValue);
 
-  // let group = {id : 3,
-  //       amount: 25000000000000000000,
-  //       members: 24,
-  //       currentMembers: 3,
-  //       currentRound: 0,
-  //       createdAt: 1234,
-  //       startTime: 1234,
-  //       endTime:0,
-  //       groupAddress:'123455'};
-
-  const { data:group, isError, isLoading } = useContractRead({
-      address: String(router.query.id),
+  const { data: group, isError, isLoading } = useContractRead({
+      address: groupAddressValue,
       abi: RoscaGroup.abi,
       functionName: 'getGroupDetails',
-  })
-  console.log(group);
+  });
 
-  const { data:roundStage, Error, Loading } = useContractRead({
+  const { data: roundStage, isError: isError1, isLoading: isLoading1 } = useContractRead({
       address: groupAddressValue,
       abi: RoscaGroup.abi,
       functionName: 'getCurrentRoundStage',
-  })
-  // let roundStage = 2
-  console.log("Round stage",roundStage);
-  if(roundStage === 1)
-    stage = 1;
+  });
 
-  React.useEffect(() => {
-      
-  },[router.isReady]);
+  const { writeApprove, isLoading: isLoading2, isMining } = useScaffoldContractWrite({
+    contractName: "Stablecoin",
+    functionName: "approve",
+    args: [groupAddressValue, BigInt(1000*10**18)],
+  });
 
-  // let group;
-  
-  // if(groupsData){
-  //   for (let i = 0; i < groupsData.length; i++) {
-  //       if(groupsData[i].groupAddress === groupAddressValue){
-  //         group = groupsData[i];
-  //       }
-  //   }
-  // }
-  // console.log(group);
+  const { config } = usePrepareContractWrite({
+    address: groupAddressValue,
+    abi: RoscaGroup.abi,
+    functionName: 'contribute',
+  });
+  const { data, isLoading: isLoading3, isSuccess, writeContribute } = useContractWrite(config);
 
   const [anonAadhaar] = useAnonAadhaar();
 
   useEffect(() => {
     console.log("Anon Aadhaar status: ", anonAadhaar.status);
-  }, [anonAadhaar]);
+  }, [anonAadhaar, router.isReady]);
 
   return (
-    
     <div 
       style={{
       backgroundImage: `url(${img.src})`,
@@ -112,7 +86,7 @@ export default function Home() {
                     <div className="flex justify-center items-center">
                     <h1 className="text-gray-900 dark:text-white text-3xl md:text-4xl font-bold mb-2">Members : <span className='font-extrabold'>{group?.currentMembers.toString()}</span></h1>
                   {
-                  group?.currentMembers.toString() > 3 ?
+                    group?.currentMembers.toString() > 3 ?
                     <div className="avatar-group -space-x-6 ml-6 ">
                     <div className="avatar">
                         <div className="w-12">
@@ -143,22 +117,22 @@ export default function Home() {
                 </div>
                 <div className="grid md:grid-cols-2 gap-8">
                   {
-                    roundStage === 1? 
+                    roundStage === 1 ? 
                     <div className="border-gray-100 bg-gray-400 backdrop-filter shadow-xl backdrop-blur-sm bg-opacity-30 rounded-lg p-2 md:p-12">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                         <path fillRule="evenodd" d="M3.22 3.22a.75.75 0 011.06 0l3.97 3.97V4.5a.75.75 0 011.5 0V9a.75.75 0 01-.75.75H4.5a.75.75 0 010-1.5h2.69L3.22 4.28a.75.75 0 010-1.06zm17.56 0a.75.75 0 010 1.06l-3.97 3.97h2.69a.75.75 0 010 1.5H15a.75.75 0 01-.75-.75V4.5a.75.75 0 011.5 0v2.69l3.97-3.97a.75.75 0 011.06 0zM3.75 15a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-2.69l-3.97 3.97a.75.75 0 01-1.06-1.06l3.97-3.97H4.5a.75.75 0 01-.75-.75zm10.5 0a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-2.69l3.97 3.97a.75.75 0 11-1.06 1.06l-3.97-3.97v2.69a.75.75 0 01-1.5 0V15z" clipRule="evenodd" />
                         </svg>
                         <h2 className="text-gray-900 dark:text-white text-3xl font-bold mb-2">Collection stage</h2>
-                        <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">Monthly collection : ${parseInt(group?.amount.toString()) / 10**18}</p>
+                        <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">Monthly contribution : ${parseInt(group?.amount.toString()) / 10**18}</p>
                             {/* <button className="btn btn-neutral sm:btn-sm md:btn-md lg:btn-lg">Pay ${parseInt(group?.amount.toString()) / 10**18}</button> */}
                         <a href="#_" className="relative inline-flex items-center justify-start inline-block px-5 py-3 overflow-hidden font-bold rounded-full group">
                         <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
                         <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-white opacity-100 group-hover:-translate-x-8"></span>
-                        <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-gray-900">Pay ${parseInt(group?.amount.toString()) / 10**18}</span>
+                        <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-gray-900" onClick={() => writeContribute()}>Pay ${parseInt(group?.amount.toString()) / 10**18}</span>
                         <span className="absolute inset-0 border-2 border-white rounded-full"></span>
                         </a>
                     </div>
-                    : roundStage === 2?
+                    : roundStage === 2 ?
                     <div className="border-gray-100 shadow-xl bg-gray-400 backdrop-filter backdrop-blur-sm bg-opacity-30 rounded-lg p-8 md:p-12">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                           <path fillRule="evenodd" d="M4.5 3.75a3 3 0 00-3 3v10.5a3 3 0 003 3h15a3 3 0 003-3V6.75a3 3 0 00-3-3h-15zm4.125 3a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zm-3.873 8.703a4.126 4.126 0 017.746 0 .75.75 0 01-.351.92 7.47 7.47 0 01-3.522.877 7.47 7.47 0 01-3.522-.877.75.75 0 01-.351-.92zM15 8.25a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5H15zM14.25 12a.75.75 0 01.75-.75h3.75a.75.75 0 010 1.5H15a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5H15z" clipRule="evenodd" />
@@ -181,7 +155,7 @@ export default function Home() {
                         </svg>
 
                         <h2 className="text-gray-900 dark:text-white text-3xl font-bold mb-2">Distribution stage</h2>
-                        <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">Distrubtion amount : ${distributionAmount} per member</p>
+                        <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">Distribution amount : ${distributionAmount} per member</p>
                         {/* <button className="btn btn-neutral sm:btn-sm md:btn-md lg:btn-lg">Claim ${distributionAmount}</button> */}
                         <a href="#_" className="relative inline-flex items-center justify-start inline-block px-5 py-3 overflow-hidden font-bold rounded-full group">
                         <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>

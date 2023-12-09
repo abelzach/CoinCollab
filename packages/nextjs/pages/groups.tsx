@@ -19,7 +19,7 @@ export default function Home() {
   const { data, isLoading, isSuccess, write } = useContractWrite({
     abi: RoscaGroup.abi,
     functionName: 'joinGroup',
-  })
+  });
 
   console.log('isSuccess: ',isSuccess);
 
@@ -141,8 +141,8 @@ export default function Home() {
                 <div className="flex justify-between items-end">
                   
                 <button onClick={() =>
-          write({address: group.groupAddress})
-        } className=" absolute bottom-4 right-8 p-4 btn btn-neutral ">Join group</button>
+                    write({address: group.groupAddress})
+                  } className=" absolute bottom-4 right-8 p-4 btn btn-neutral ">Join group</button>
                 </div>
               </div>
             </div>

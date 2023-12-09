@@ -20,7 +20,7 @@ polygonMumbai = "https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
 gnosis = "https://rpc.gnosischain.com"
 chiado = "https://rpc.chiadochain.net"
 base = "https://mainnet.base.org"
-baseGoerli = "https://goerli.base.org"
+baseGoerli = "https://base-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
 polygonZkEvm = "https://polygonzkevm-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
 polygonZkEvmTestnet = "https://polygonzkevm-testnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
 zkSyncTestnet = "https://testnet.era.zksync.dev"
@@ -31,5 +31,8 @@ scroll = "https://rpc.scroll.io"
 [etherscan]
 polygonMumbai = { key = "${ETHERSCAN_API_KEY}" }
 goerli = { key = "${ETHERSCAN_API_KEY}" }
+arbitrumGoerli = { key = "${ETHERSCAN_API_KEY}" }
+baseGoerli = { key = "${ETHERSCAN_API_KEY}" }
+polygonZkEvmTestnet = { key = "${ETHERSCAN_API_KEY}" }
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

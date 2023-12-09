@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -12,13 +12,16 @@ contract RoscaGroup is IRoscaGroup, Initializable {
     mapping(uint256 => bytes) proofs;
 
     uint8 public constant PLATFORM_FEE = 5;
+    uint16 public constant MIN_CREDIT_SCORE = 400;
     address public STABLECOIN_ADDRESS;
     address public MANAGER_ADDRESS;
     address public MULTI_SIG_ADDRESS;
     address public owner;
+    address public oracle;
 
     mapping(address => bool) public isMember;
     mapping(address => bool) public isWinner;
+    mapping(address => bool) public isBlacklisted;
     mapping(address => uint256) public unclaimedAmount;
 
     GroupStage public groupStage = GroupStage.INITIALIZED;
@@ -33,6 +36,11 @@ contract RoscaGroup is IRoscaGroup, Initializable {
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner");
+        _;
+    }
+
+    modifier onlyOracle() {
+        require(msg.sender == oracle, "Only oracle");
         _;
     }
 
@@ -162,6 +170,7 @@ contract RoscaGroup is IRoscaGroup, Initializable {
     }
 
     function claim() external onlyMember {
+        require(!isBlacklisted[msg.sender], "Blacklisted");
         require(unclaimedAmount[msg.sender] > 0, "Nothing to claim");
         IERC20(STABLECOIN_ADDRESS).transfer(
             msg.sender,
@@ -183,6 +192,16 @@ contract RoscaGroup is IRoscaGroup, Initializable {
 
     function setMultiSigAddress(address multiSigAddress) external onlyOwner {
         MULTI_SIG_ADDRESS = multiSigAddress;
+    }
+
+    function setOracleAddress(address oracleAddress) external onlyOwner {
+        oracle = oracleAddress;
+    }
+
+    function setMemberReputation(address member, uint256 score) external onlyOracle {
+        if (score <= MIN_CREDIT_SCORE) {
+            isBlacklisted[member] = true;
+        }
     }
 
     function publishProof(uint256 round, bytes memory proof) external onlyMultiSigOrOwner {
