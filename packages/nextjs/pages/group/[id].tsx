@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useContractRead } from 'wagmi'
 import React from 'react';
 import RoscaGroup from '../../abis/RoscaGroup.json';
+let stage = 1;
 
 export default function Home() {
   let distributionAmount = 5
@@ -45,6 +46,15 @@ export default function Home() {
   })
   console.log(group);
 
+  const { data:roundStage, Error, Loading } = useContractRead({
+      address: groupAddressValue,
+      abi: RoscaGroup.abi,
+      functionName: 'getCurrentRoundStage',
+  })
+  console.log("Round stage",roundStage);
+  if(roundStage === 1)
+    stage = 1;
+
   React.useEffect(() => {
       
   },[router.isReady]);
@@ -73,7 +83,7 @@ export default function Home() {
       backgroundImage: `url(${img.src})`,
       backgroundSize: 'cover',
       backgroundAttachment: 'fixed',
-      height: '100vh', 
+      minHeight: '100vh', 
       top: 0,
       bottom: 0,
       left: 0,
@@ -138,12 +148,12 @@ export default function Home() {
                     }
                 </div>
                 <div className="grid md:grid-cols-2 gap-8">
+                  {
+                    roundStage === 1? 
                     <div className="border-gray-100 bg-gray-400 backdrop-filter shadow-xl backdrop-blur-sm bg-opacity-30 rounded-lg p-2 md:p-12">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                         <path fillRule="evenodd" d="M3.22 3.22a.75.75 0 011.06 0l3.97 3.97V4.5a.75.75 0 011.5 0V9a.75.75 0 01-.75.75H4.5a.75.75 0 010-1.5h2.69L3.22 4.28a.75.75 0 010-1.06zm17.56 0a.75.75 0 010 1.06l-3.97 3.97h2.69a.75.75 0 010 1.5H15a.75.75 0 01-.75-.75V4.5a.75.75 0 011.5 0v2.69l3.97-3.97a.75.75 0 011.06 0zM3.75 15a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-2.69l-3.97 3.97a.75.75 0 01-1.06-1.06l3.97-3.97H4.5a.75.75 0 01-.75-.75zm10.5 0a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-2.69l3.97 3.97a.75.75 0 11-1.06 1.06l-3.97-3.97v2.69a.75.75 0 01-1.5 0V15z" clipRule="evenodd" />
                         </svg>
-
-
                         <h2 className="text-gray-900 dark:text-white text-3xl font-bold mb-2">Collection stage</h2>
                         <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">Monthly collection : ${parseInt(group?.amount.toString()) / 10**18}</p>
                             {/* <button className="btn btn-neutral sm:btn-sm md:btn-md lg:btn-lg">Pay ${parseInt(group?.amount.toString()) / 10**18}</button> */}
@@ -154,6 +164,7 @@ export default function Home() {
                         <span className="absolute inset-0 border-2 border-white rounded-full"></span>
                         </a>
                     </div>
+                    :
                     <div className="border-gray-100 shadow-xl bg-gray-400 backdrop-filter backdrop-blur-sm bg-opacity-30 rounded-lg p-8 md:p-12">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                         <path fillRule="evenodd" d="M15 3.75a.75.75 0 01.75-.75h4.5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0V5.56l-3.97 3.97a.75.75 0 11-1.06-1.06l3.97-3.97h-2.69a.75.75 0 01-.75-.75zm-12 0A.75.75 0 013.75 3h4.5a.75.75 0 010 1.5H5.56l3.97 3.97a.75.75 0 01-1.06 1.06L4.5 5.56v2.69a.75.75 0 01-1.5 0v-4.5zm11.47 11.78a.75.75 0 111.06-1.06l3.97 3.97v-2.69a.75.75 0 011.5 0v4.5a.75.75 0 01-.75.75h-4.5a.75.75 0 010-1.5h2.69l-3.97-3.97zm-4.94-1.06a.75.75 0 010 1.06L5.56 19.5h2.69a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75v-4.5a.75.75 0 011.5 0v2.69l3.97-3.97a.75.75 0 011.06 0z" clipRule="evenodd" />
@@ -169,6 +180,35 @@ export default function Home() {
                         <span className="absolute inset-0 border-2 border-white rounded-full"></span>
                         </a>
                     </div>
+                  }
+                  <div className="border-gray-100 bg-gray-400 backdrop-filter shadow-xl backdrop-blur-sm bg-opacity-30 rounded-lg p-2 md:p-12">
+                      <div className="overflow-x-auto">
+                      <table className="table">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Chain</th>
+                            <th>Group</th>
+                            <th>Round</th>
+                            <th>Winner</th>
+                            <th>Bid</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          
+                          <tr>
+                            <th>1</th>
+                            <td>Goerli</td>
+                            <td>Gang</td>
+                            <th>8</th>
+                            <td>Jake</td>
+                            <td>$450</td>
+                          </tr>
+                          
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
             </div>
         </section>

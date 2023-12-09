@@ -46,7 +46,7 @@ export default function Home() {
       backgroundImage: `url(${img.src})`,
       backgroundSize: 'cover',
       backgroundAttachment: 'fixed',
-      height: '100vh', 
+      minHeight: '100vh', 
       top: 0,
       bottom: 0,
       left: 0,
