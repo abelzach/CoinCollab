@@ -12,6 +12,7 @@
     "backend:start": "yarn workspace @coincollab/backend start",
     "chain": "yarn workspace @coincollab/foundry chain",
     "compile": "yarn workspace @coincollab/foundry compile",
+    "compile:circuits": "yarn workspace @coincollab/foundry compile:circuits",
     "deploy": "yarn workspace @coincollab/foundry deploy",
     "deploy:verify": "yarn workspace @coincollab/foundry deploy:verify",
     "fork": "yarn workspace @coincollab/foundry fork",
