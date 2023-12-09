@@ -17,6 +17,8 @@ contract RoscaGroup is IRoscaGroup, Initializable {
     address public owner;
 
     mapping(address => bool) public isMember;
+    mapping(address => bool) public isWinner;
+    mapping(address => uint256) public unclaimedAmount;
 
     GroupStage public groupStage = GroupStage.INITIALIZED;
     mapping(uint256 => RoundStage) public roundStage;
@@ -72,7 +74,7 @@ contract RoscaGroup is IRoscaGroup, Initializable {
         owner = owner_;
     }
 
-     function joinGroup() external {
+    function joinGroup() external {
         require(!isMember[msg.sender], "Already joined");
         require(_members.length < _groupDetails.members, "Group is full");
         require(groupStage == GroupStage.INITIALIZED, "Group started");
@@ -109,6 +111,75 @@ contract RoscaGroup is IRoscaGroup, Initializable {
         }
     }
 
+    function distribute(uint256 winningBid, address winner) external onlyMultiSigOrOwner {
+        require(groupStage == GroupStage.ONGOING, "Group not ongoing");
+        uint256 round = _groupDetails.currentRound;
+        require(roundStage[round] == RoundStage.BIDDING, "Not in bidding stage");
+        require(isMember[winner], "Not a member");
+        require(!isWinner[winner], "Already won");
+        require(winningBid > 0, "Bid cannot be zero");
+
+        uint256 poolFund = _groupDetails.amount * _groupDetails.members;
+        IERC20(STABLECOIN_ADDRESS).transferFrom(
+            msg.sender,
+            address(this),
+            poolFund
+        );
+        uint256 fee = (poolFund * PLATFORM_FEE) / 100;
+        uint256 totalDividend = poolFund - fee - winningBid;
+
+        if (totalDividend > 0) {
+            uint256 dividend = totalDividend / (_groupDetails.members - 1);
+            for (uint256 i = 0; i < _members.length; i++) {
+                if (_members[i] != winner) {
+                    unclaimedAmount[_members[i]] += dividend;
+                } else {
+                    unclaimedAmount[_members[i]] += winningBid;
+                }
+            }
+        } else {
+            unclaimedAmount[winner] += winningBid;
+        }
+        IERC20(STABLECOIN_ADDRESS).transferFrom(
+            address(this),
+            MANAGER_ADDRESS,
+            fee
+        );
+        isWinner[winner] = true;
+        roundStage[round] = RoundStage.ENDED;
+        emit RoundEnded(round, block.timestamp);
+
+        if (round != _groupDetails.members) {
+            _groupDetails.currentRound++;
+            roundStage[_groupDetails.currentRound] = RoundStage.COLLECTION;
+            emit RoundStarted(_groupDetails.currentRound, block.timestamp);
+        } else {
+            groupStage = GroupStage.ENDED;
+            _groupDetails.endTime = block.timestamp;
+            emit GroupEnded(block.timestamp);
+        }
+    }
+
+    function claim() external onlyMember {
+        require(unclaimedAmount[msg.sender] > 0, "Nothing to claim");
+        IERC20(STABLECOIN_ADDRESS).transfer(
+            msg.sender,
+            unclaimedAmount[msg.sender]
+        );
+        unclaimedAmount[msg.sender] = 0;
+    }
+
+    function cancelGroup() external onlyOwner {
+        require(
+            groupStage != GroupStage.ENDED &&
+            groupStage != GroupStage.CANCELLED,
+            "Group already ended or cancelled"
+        );
+        groupStage = GroupStage.CANCELLED;
+        _groupDetails.endTime = block.timestamp;
+        emit GroupCancelled(block.timestamp);
+    }
+
     function setMultiSigAddress(address multiSigAddress) external onlyOwner {
         MULTI_SIG_ADDRESS = multiSigAddress;
     }
@@ -141,5 +212,24 @@ contract RoscaGroup is IRoscaGroup, Initializable {
             }
         }
         return true;
+    }
+
+    function getNonPrizedMembers() public view returns (address[] memory) {
+        uint256 nonPrizedMembersCount = 0;
+        for (uint256 i = 0; i < _members.length; i++) {
+            if (!isWinner[_members[i]]) {
+                nonPrizedMembersCount++;
+            }
+        }
+
+        address[] memory nonPrizedMembers = new address[](nonPrizedMembersCount);
+        uint256 nonPrizedMembersIndex = 0;
+        for (uint256 i = 0; i < _members.length; i++) {
+            if (!isWinner[_members[i]]) {
+                nonPrizedMembers[nonPrizedMembersIndex] = _members[i];
+                nonPrizedMembersIndex++;
+            }
+        }
+        return nonPrizedMembers;
     }
 }
