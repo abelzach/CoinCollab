@@ -13,6 +13,7 @@ contract RoscaGroup is IRoscaGroup, Initializable {
     uint8 public constant PLATFORM_FEE = 5;
     address public STABLECOIN_ADDRESS;
     address public MANAGER_ADDRESS;
+    address public MULTI_SIG_ADDRESS;
     address public owner;
 
     mapping(address => bool) public isMember;
@@ -34,6 +35,14 @@ contract RoscaGroup is IRoscaGroup, Initializable {
 
     modifier onlyMember() {
         require(isMember[msg.sender], "Only member");
+        _;
+    }
+
+    modifier onlyMultiSigOrOwner() {
+        require(
+            msg.sender == MULTI_SIG_ADDRESS || msg.sender == owner,
+            "Only multisig or owner"
+        );
         _;
     }
 
@@ -63,7 +72,7 @@ contract RoscaGroup is IRoscaGroup, Initializable {
         owner = owner_;
     }
 
-    function joinGroup() external {
+     function joinGroup() external {
         require(!isMember[msg.sender], "Already joined");
         require(_members.length < _groupDetails.members, "Group is full");
         require(groupStage == GroupStage.INITIALIZED, "Group started");
@@ -77,7 +86,31 @@ contract RoscaGroup is IRoscaGroup, Initializable {
             _groupDetails.startTime = block.timestamp;
             _groupDetails.currentRound = 1;
             roundStage[_groupDetails.currentRound] = RoundStage.COLLECTION;
+            emit GroupStarted(block.timestamp);
+            emit RoundStarted(_groupDetails.currentRound, block.timestamp);
         }
+    }
+
+    function contribute() external onlyMember {
+        require(groupStage == GroupStage.ONGOING, "Group not ongoing");
+        uint256 round = _groupDetails.currentRound;
+        require(roundStage[round] == RoundStage.COLLECTION, "Not in collection stage");
+        require(!_memberContributed[round][msg.sender], "Already contributed");
+        
+        address vault = MULTI_SIG_ADDRESS != address(0) ? MULTI_SIG_ADDRESS : owner;
+        IERC20(STABLECOIN_ADDRESS).transferFrom(
+            msg.sender,
+            vault,
+            _groupDetails.amount
+        );
+        _memberContributed[round][msg.sender] = true;
+        if (allMembersContributed()) {
+            roundStage[round] = RoundStage.BIDDING;
+        }
+    }
+
+    function setMultiSigAddress(address multiSigAddress) external onlyOwner {
+        MULTI_SIG_ADDRESS = multiSigAddress;
     }
 
     function getGroupDetails() public view returns (GroupDetails memory) {
@@ -90,5 +123,23 @@ contract RoscaGroup is IRoscaGroup, Initializable {
 
     function getCurrentRound() public view returns (uint256) {
         return _groupDetails.currentRound;
+    }
+
+    function getCurrentRoundStage() public view returns (RoundStage) {
+        return roundStage[_groupDetails.currentRound];
+    }
+
+    function hasMemberContributed(address member) public view returns (bool) {
+        return _memberContributed[_groupDetails.currentRound][member];
+    }
+
+    function allMembersContributed() public view returns (bool) {
+        uint256 round = _groupDetails.currentRound;
+        for (uint256 i = 0; i < _members.length; i++) {
+            if (!_memberContributed[round][_members[i]]) {
+                return false;
+            }
+        }
+        return true;
     }
 }
