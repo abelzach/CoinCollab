@@ -20,6 +20,13 @@ contract RoscaGroup is IRoscaGroup, Initializable {
     GroupStage public groupStage = GroupStage.INITIALIZED;
     mapping(uint256 => RoundStage) public roundStage;
 
+    event GroupStarted(uint256 startTime);
+    event GroupEnded(uint256 endTime);
+    event GroupCancelled(uint256 endTime);
+
+    event RoundStarted(uint256 round, uint256 startTime);
+    event RoundEnded(uint256 round, uint256 endTime);
+
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner");
         _;
