@@ -5,18 +5,12 @@ import avatar from '../../public/avatar.png';
 import { useRouter } from 'next/router';
 import {  useAnonAadhaar } from "anon-aadhaar-react";
 import { useEffect } from "react";
-import { useScaffoldContractRead } from '~~/hooks/scaffold-eth';
 import { useContractRead } from 'wagmi'
 import React from 'react';
 import RoscaGroup from '../../abis/RoscaGroup.json';
 
 export default function Home() {
-  let amt = 2500;
-  let groupId = 12345;
-  let members = 12;
   let distributionAmount = 5
-  let collectionAmount = 50
-
 
   const router = useRouter();
   
@@ -151,8 +145,8 @@ export default function Home() {
 
 
                         <h2 className="text-gray-900 dark:text-white text-3xl font-bold mb-2">Collection stage</h2>
-                        <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">Monthly collection : ${collectionAmount}</p>
-                            <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg">Pay ${collectionAmount}</button>
+                        <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">Monthly collection : ${parseInt(group?.amount.toString()) / 10**18}</p>
+                            <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg">Pay ${parseInt(group?.amount.toString()) / 10**18}</button>
                     </div>
                     <div className="border-gray-100 shadow-xl bg-gray-400 backdrop-filter backdrop-blur-sm bg-opacity-30 rounded-lg p-8 md:p-12">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
