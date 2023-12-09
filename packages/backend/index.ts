@@ -78,6 +78,50 @@ app.get('/api/get-group', async (req, res) => {
     }
 });
 
+app.post('/api/place-bid', async (req, res) => {
+    try {
+      const { chain, group, round, member, bid_hash } = req.body;
+      if (!chain) throw new Error('Chain not specified');
+      if (!group) throw new Error('Group ID not specified');
+      if (!round) throw new Error('Round not specified');
+      if (!member) throw new Error('Member not specified');
+      if (!bid_hash) throw new Error('Bid hash not specified');
+  
+      const { data, error } = await supabase
+        .from('bids')
+        .insert([{ chain, group, round, member, bid_hash }]);
+      if (error) throw error;
+      return res.status(200).json(data);
+    } catch (error) {
+      console.log(error);
+      return res.status(500);
+    }
+});
+
+app.post('/api/reveal-bid', async (req, res) => {
+    try {
+      const { chain, group, round, member, bid } = req.body;
+      if (!chain) throw new Error('Chain not specified');
+      if (!group) throw new Error('Group ID not specified');
+      if (!round) throw new Error('Round not specified');
+      if (!member) throw new Error('Member not specified');
+      if (!bid) throw new Error('Bid not specified');
+  
+      const { data, error } = await supabase
+        .from('bids')
+        .update({ bid })
+        .eq('chain', chain)
+        .eq('group', group)
+        .eq('round', round)
+        .eq('member', member);
+      if (error) throw error;
+      return res.status(200).json(data);
+    } catch (error) {
+      console.log(error);
+      return res.status(500);
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
