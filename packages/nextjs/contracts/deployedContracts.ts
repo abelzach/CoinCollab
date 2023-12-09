@@ -748,6 +748,66 @@ const deployedContracts = {
         },
         {
           type: "function",
+          name: "getOpenGroups",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "tuple[]",
+              internalType: "struct IRoscaGroup.GroupDetails[]",
+              components: [
+                {
+                  name: "id",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "amount",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "members",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "currentMembers",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "currentRound",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "createdAt",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "startTime",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "endTime",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "groupAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+              ],
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
           name: "numberOfGroups",
           inputs: [],
           outputs: [
@@ -802,6 +862,13 @@ const deployedContracts = {
               internalType: "address",
             },
           ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "withdrawStablecoin",
+          inputs: [],
           outputs: [],
           stateMutability: "nonpayable",
         },
