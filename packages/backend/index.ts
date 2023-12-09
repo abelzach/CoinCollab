@@ -43,6 +43,41 @@ app.post('/api/create-group', async (req, res) => {
     }
 });
 
+app.get('/api/get-groups', async (req, res) => {
+    try {
+      const { chain } = req.params as any;
+      if (!chain) throw new Error('Chain not specified');
+      const { data, error } = await supabase
+        .from('groups')
+        .select('*')
+        .eq('chain', chain);
+      if (error) throw error;
+      return res.status(200).json(data);
+    } catch (error) {
+      console.log(error);
+      return res.status(500);
+    }
+});
+
+app.get('/api/get-group', async (req, res) => {
+    try {
+      const { chain, group } = req.params as any;
+      if (!chain) throw new Error('Chain not specified');
+      if (!group) throw new Error('Group ID not specified');
+  
+      const { data, error } = await supabase
+        .from('groups')
+        .select('*')
+        .eq('chain', chain)
+        .eq('group', group);
+      if (error) throw error;
+      return res.status(200).json(data);
+    } catch (error) {
+      console.log(error);
+      return res.status(500);
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
