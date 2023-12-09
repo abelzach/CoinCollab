@@ -1,5 +1,5 @@
 {
-  "name": "@rosca/showrunners",
+  "name": "@coincollab/showrunners",
   "version": "0.4.1",
   "description": "Server to listen and perform services for EPNS",
   "main": "src/app.ts",
@@ -35,9 +35,9 @@
   "homepage": "https://github.com/ethereum-push-notification-system/epns-push-register-service#readme",
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@arbitrum/sdk": "^1.1.0",
     "@aragon/sdk-client": "^1.19.0",
     "@aragon/sdk-client-common": "^1.5.0-rc0",
+    "@arbitrum/sdk": "^1.1.0",
     "@gnosis.pm/safe-service-client": "^1.4.0",
     "@google-cloud/bigquery": "^6.2.0",
     "@improbable-eng/grpc-web": "^0.15.0",
@@ -79,7 +79,6 @@
     "express": "^4.16.2",
     "express-basic-auth": "^1.2.0",
     "express-jwt": "^5.3.1",
-    "feed-reader": "^5.0.1",
     "firebase-admin": "8.12.1",
     "graphql": "^15.4.0",
     "graphql-request": "^3.5.0",
