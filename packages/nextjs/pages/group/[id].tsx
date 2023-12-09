@@ -14,12 +14,11 @@ export default function Home() {
 
   const router = useRouter();
   
-  const handleButtonClick = () => {
-    router.push('/auction');
+  const handleButtonClick = (groupAddress) => {
+    router.push(`/auction/${groupAddress}`);
   };
 
   
-
   // const { data: groupsData } = useScaffoldContractRead({
   //   contractName: "RoscaManager",
   //   functionName: "getOpenGroups",
@@ -131,7 +130,7 @@ export default function Home() {
                     {
                       anonAadhaar?.status === "logged-in" ?
                         <div className="flex mt-2 justify-center ">
-                          <button onClick={handleButtonClick} className=" p-4 ml-10 btn btn-neutral ">Participate in bidding</button>
+                          <button onClick={() => handleButtonClick(groupAddressValue)} className=" p-4 ml-10 btn btn-neutral ">Participate in bidding</button>
                       </div>
                       :
                         <></>

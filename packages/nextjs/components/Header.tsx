@@ -1,10 +1,10 @@
 import React, { useCallback, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
+import { useAnonAadhaar} from "anon-aadhaar-react";
 
 type HeaderMenuLink = {
   label: string;
@@ -57,6 +57,11 @@ export const HeaderMenuLinks = () => {
  * Site header
  */
 export const Header = () => {
+  const [anonAadhaar] = useAnonAadhaar();
+
+  React.useEffect(() => {
+    console.log("Anon Aadhaar status: ", anonAadhaar.status);
+  }, [anonAadhaar]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const burgerMenuRef = useRef<HTMLDivElement>(null);
   useOutsideClick(
@@ -103,6 +108,7 @@ export const Header = () => {
         </ul>
       </div>
       <div className="navbar-end flex-grow mr-4">
+        <p>Anon Aadhar : {anonAadhaar?.status}</p>
         <RainbowKitCustomConnectButton />
         <FaucetButton />
       </div>

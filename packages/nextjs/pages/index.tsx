@@ -1,7 +1,7 @@
 import img from '../public/background.jpg';
 import Polygon from '../public/polygon.png';
 import Image from 'next/image'
-import Avalance from '../public/avalanche.png'
+import Base from '../public/base.png'
 import Arbitrum from '../public/Arbitrum.png'
 import { LogInWithAnonAadhaar, useAnonAadhaar, AnonAadhaarProof } from "anon-aadhaar-react";
 import { useEffect } from 'react';
@@ -64,7 +64,7 @@ export default function Home() {
                 <p>Available on </p>
                 <div className='flex pt-2'>
                   <Image className="w-1/12" src={Polygon} alt='Polygon logo'></Image>    
-                  <Image className="w-1/12 ml-2" src={Avalance} alt='Polygon logo'></Image>
+                  <Image className="w-1/12 ml-2" src={Base} alt='Base logo'></Image>
                   <Image className="w-1/12 ml-2" src={Arbitrum} alt='Arbitrum logo'></Image>
                 </div>
               </div>
