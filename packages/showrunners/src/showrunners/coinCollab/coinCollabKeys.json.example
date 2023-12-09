@@ -1,0 +1,11 @@
+{
+    "PRIVATE_KEY_NEW_STANDARD_1": {
+        "PK": "PRIVATE_KEY_1",
+        "CHAIN_ID": "CHAIN_ID_1" // eg: eip155:11155111
+    },
+    "PRIVATE_KEY_NEW_STANDARD_2": {
+        "PK": "PRIVATE_KEY_2",
+        "CHAIN_ID": "CHAIN_ID_2"
+    }
+}
+
