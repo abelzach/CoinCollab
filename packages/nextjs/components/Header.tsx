@@ -5,6 +5,8 @@ import { Bars3Icon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 import { useAnonAadhaar} from "anon-aadhaar-react";
+import logo from '.././public/logo.png';
+import Image from "next/image";
 
 type HeaderMenuLink = {
   label: string;
@@ -96,7 +98,7 @@ export const Header = () => {
         </div>
         <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
           <div className="flex relative w-10 h-10">
-            {/* <Image alt="SE2 logo" className="cursor-pointer" fill src="/logo.svg" /> */}
+            <Image alt="logo" className="cursor-pointer" fill src={logo} />
           </div>
           <div className="flex flex-col">
             <span className="font-bold leading-tight">CoinCollab</span>
