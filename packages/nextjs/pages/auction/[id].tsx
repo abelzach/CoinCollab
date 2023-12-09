@@ -14,9 +14,6 @@ export default function Home() {
   const [seconds, setSeconds] = useState(48);
   const [ethAmount, setEthAmount] = useState("");
 
-  let bidHigh = 345;
-  let round = 12;
-
   const router = useRouter();
   const groupAddressValue = String(router.query.id);
   console.log(groupAddressValue);
@@ -27,6 +24,25 @@ export default function Home() {
       functionName: 'getGroupDetails',
   })
   console.log(group);
+
+  let maxDiscount = (parseInt(group?.amount.toString()) / 10**18) * (parseInt(group?.members.toString())) * .75
+  console.log("max",maxDiscount);
+
+  const { data:roundStage, Error, Loading } = useContractRead({
+      address: groupAddressValue,
+      abi: RoscaGroup.abi,
+      functionName: 'getCurrentRoundStage',
+  })
+  console.log("Round stage",roundStage);
+  if(roundStage === 1)
+    stage = 1;
+
+  const { data:round, ErrorRound, LoadingROund } = useContractRead({
+      address: groupAddressValue,
+      abi: RoscaGroup.abi,
+      functionName: 'getCurrentRound',
+  })
+  console.log("Round", round);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -124,7 +140,7 @@ export default function Home() {
                     <div className="stat-figure text-primary">
                     </div>
                     <div className="stat-value text-primary">Group ID : {group?.id.toString()}</div>
-                     <div className="stat-title">Round : {round}</div>
+                     <div className="stat-title">Round : {parseInt(round)}</div>
                 </div>
             </div>
             </div>
@@ -136,7 +152,7 @@ export default function Home() {
                             <h2 className=" card-title text-white">Bidding Stage <div className="ml-2  badge badge-xs">Reserve not met. May still get sold</div></h2>
                                 
                             <p className=" mt-0 text-left text-white font-normal">
-                                Current highest Bid : <span className="text-3xl font-extrabold">${bidHigh}</span>
+                                Maximum discount : <span className="text-3xl font-extrabold">${maxDiscount}</span>
                             </p>
 
                             <EtherInput value={ethAmount} onChange={amount => setEthAmount(amount)} />
