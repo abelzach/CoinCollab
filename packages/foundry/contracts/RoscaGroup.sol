@@ -9,6 +9,7 @@ contract RoscaGroup is IRoscaGroup, Initializable {
     address[] _members;
     GroupDetails _groupDetails;
     mapping(uint256 => mapping(address => bool)) _memberContributed;
+    mapping(uint256 => bytes) proofs;
 
     uint8 public constant PLATFORM_FEE = 5;
     address public STABLECOIN_ADDRESS;
@@ -182,6 +183,17 @@ contract RoscaGroup is IRoscaGroup, Initializable {
 
     function setMultiSigAddress(address multiSigAddress) external onlyOwner {
         MULTI_SIG_ADDRESS = multiSigAddress;
+    }
+
+    function publishProof(uint256 round, bytes memory proof) external onlyMultiSigOrOwner {
+        require(round <= _groupDetails.members, "Invalid round");
+        require(roundStage[round] == RoundStage.ENDED, "Round not ended");
+        require(proofs[round].length == 0, "Proof already published");
+        proofs[round] = proof;
+    }
+
+    function getProof(uint256 round) public view returns (bytes memory) {
+        return proofs[round];
     }
 
     function getGroupDetails() public view returns (GroupDetails memory) {
