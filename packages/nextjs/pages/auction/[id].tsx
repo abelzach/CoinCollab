@@ -149,7 +149,7 @@ export default function Home() {
                 stage ? 
                     <div className="card w-2/3 mt-4 shadow-xl border-gray-100 bg-gray-400 backdrop-filter backdrop-blur-sm bg-opacity-30 text-neutral-content">
                         <div className="card-body  text-center">
-                            <h2 className=" card-title text-white">Bidding Stage <div className="ml-2  badge badge-xs">Reserve not met. May still get sold</div></h2>
+                            <h2 className=" card-title text-white">Bidding Stage <div className="ml-2 bg-black badge badge-xs">Reserve not met. May still get sold</div></h2>
                                 
                             <p className=" mt-0 text-left text-white font-normal">
                                 Maximum discount : <span className="text-3xl font-extrabold">${maxDiscount}</span>
@@ -158,7 +158,13 @@ export default function Home() {
                             <EtherInput value={ethAmount} onChange={amount => setEthAmount(amount)} />
 
                             <div className="card-actions justify-end">
-                            <button className="btn btn-primary">Place Bid</button>
+                            {/* <button className="btn btn-primary">Place Bid</button> */}
+                            <a href="#_" className="relative inline-flex items-center justify-start inline-block px-5 py-3 overflow-hidden font-bold rounded-full group">
+                            <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
+                            <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-white opacity-100 group-hover:-translate-x-8"></span>
+                            <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-gray-900">Place Bid</span>
+                            <span className="absolute inset-0 border-2 border-white rounded-full"></span>
+                            </a>
                             </div>
                         </div>
                     </div>
@@ -172,12 +178,15 @@ export default function Home() {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
                                 </svg>
                             </div>
-                                <p className="text-white mt-0 text-left  flex-grow font-normal">
-                                    Highest Bid : <span className="text-3xl font-extrabold">${bidHigh}</span> 
-                                </p>
                             <EtherInput value={ethAmount} onChange={amount => setEthAmount(amount)} />
                             <div className="card-actions justify-end">
-                            <button className="btn btn-primary">Verify</button>
+                            {/* <button className="btn btn-primary">Verify</button> */}
+                            <a href="#_" className="relative inline-flex items-center justify-start inline-block px-5 py-3 overflow-hidden font-bold rounded-full group">
+                            <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
+                            <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-white opacity-100 group-hover:-translate-x-8"></span>
+                            <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-gray-900">Submit</span>
+                            <span className="absolute inset-0 border-2 border-white rounded-full"></span>
+                            </a>
                             </div>
                         </div>
                     </div>
@@ -188,7 +197,7 @@ export default function Home() {
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
             </svg> 
-            <p className='pl-2 text-sm'> <span className="underline">Watch</span> : (14 Watchers)</p>  
+            <p className='pl-2 text-sm'> <span className="underline">Watch</span> : ({group?.members.toString()} Watchers)</p>  
             </div>
         </center>
       </div>

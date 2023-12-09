@@ -27,6 +27,7 @@ export default function Home() {
         backgroundSize: 'cover',
         height: '100vh'
         }}
+        className='bg-cover bg-scroll'
       >
       <div className="flex">
         <div className="w-2/3">
