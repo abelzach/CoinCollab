@@ -51,6 +51,7 @@ export default function Home() {
       abi: RoscaGroup.abi,
       functionName: 'getCurrentRoundStage',
   })
+  // let roundStage = 2
   console.log("Round stage",roundStage);
   if(roundStage === 1)
     stage = 1;
@@ -138,14 +139,7 @@ export default function Home() {
                     <></>
                   } 
                     </div>
-                    {
-                      anonAadhaar?.status === "logged-in" ?
-                        <div className="flex mt-2 justify-center ">
-                          <button onClick={() => handleButtonClick(groupAddressValue)} className=" p-4 ml-10 btn btn-neutral ">Participate in bidding</button>
-                      </div>
-                      :
-                        <></>
-                    }
+                    
                 </div>
                 <div className="grid md:grid-cols-2 gap-8">
                   {
@@ -164,8 +158,24 @@ export default function Home() {
                         <span className="absolute inset-0 border-2 border-white rounded-full"></span>
                         </a>
                     </div>
-                    :
+                    : roundStage === 2?
                     <div className="border-gray-100 shadow-xl bg-gray-400 backdrop-filter backdrop-blur-sm bg-opacity-30 rounded-lg p-8 md:p-12">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                          <path fillRule="evenodd" d="M4.5 3.75a3 3 0 00-3 3v10.5a3 3 0 003 3h15a3 3 0 003-3V6.75a3 3 0 00-3-3h-15zm4.125 3a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zm-3.873 8.703a4.126 4.126 0 017.746 0 .75.75 0 01-.351.92 7.47 7.47 0 01-3.522.877 7.47 7.47 0 01-3.522-.877.75.75 0 01-.351-.92zM15 8.25a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5H15zM14.25 12a.75.75 0 01.75-.75h3.75a.75.75 0 010 1.5H15a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5H15z" clipRule="evenodd" />
+                        </svg>
+                        <h2 className="text-gray-900 dark:text-white text-3xl font-bold mb-2">Bidding stage</h2>
+                        <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">Participate in bidding</p>
+                        {
+                          anonAadhaar?.status === "logged-in" ?
+                            <div className="flex mt-2 justify-center ">
+                              <button onClick={() => handleButtonClick(groupAddressValue)} className=" btn btn-neutral ">Participate in bidding</button>
+                          </div>
+                          :
+                            <></>
+                        }
+                    </div>
+                    :
+                      <div className="border-gray-100 shadow-xl bg-gray-400 backdrop-filter backdrop-blur-sm bg-opacity-30 rounded-lg p-8 md:p-12">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                         <path fillRule="evenodd" d="M15 3.75a.75.75 0 01.75-.75h4.5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0V5.56l-3.97 3.97a.75.75 0 11-1.06-1.06l3.97-3.97h-2.69a.75.75 0 01-.75-.75zm-12 0A.75.75 0 013.75 3h4.5a.75.75 0 010 1.5H5.56l3.97 3.97a.75.75 0 01-1.06 1.06L4.5 5.56v2.69a.75.75 0 01-1.5 0v-4.5zm11.47 11.78a.75.75 0 111.06-1.06l3.97 3.97v-2.69a.75.75 0 011.5 0v4.5a.75.75 0 01-.75.75h-4.5a.75.75 0 010-1.5h2.69l-3.97-3.97zm-4.94-1.06a.75.75 0 010 1.06L5.56 19.5h2.69a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75v-4.5a.75.75 0 011.5 0v2.69l3.97-3.97a.75.75 0 011.06 0z" clipRule="evenodd" />
                         </svg>
@@ -182,6 +192,7 @@ export default function Home() {
                     </div>
                   }
                   <div className="border-gray-100 bg-gray-400 backdrop-filter shadow-xl backdrop-blur-sm bg-opacity-30 rounded-lg p-2 md:p-12">
+                      {/* <p>Auction history table</p> */}
                       <div className="overflow-x-auto">
                       <table className="table">
                         <thead>
@@ -189,13 +200,13 @@ export default function Home() {
                             <th>ID</th>
                             <th>Chain</th>
                             <th>Group</th>
-                            <th>Round</th>
+                            <th>Round</th>  
                             <th>Winner</th>
                             <th>Bid</th>
                           </tr>
                         </thead>
                         <tbody>
-                          
+
                           <tr>
                             <th>1</th>
                             <td>Goerli</td>
