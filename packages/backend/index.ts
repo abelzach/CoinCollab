@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { ethers, Contract, Wallet, Provider } from 'ethers';
 import dotenv from 'dotenv';
 import { contractAddress } from './contractAddress';
+import { EthersAdapter, SafeAccountConfig, SafeFactory } from '@safe-global/protocol-kit';
 
 const RoscaManager = require("../nextjs/abis/RoscaManager.json");
 const RoscaGroup = require("../nextjs/abis/RoscaGroup.json");
@@ -27,7 +28,7 @@ app.get('/api/add-listener', async (req, res) => {
     try {
         const { chain } = req.query as any;
         if (!chain) throw new Error('Chain not specified');
-        
+
         let provider: Provider;
         switch (parseInt(chain)) {
             case 31337: provider = localhostProvider; break;
@@ -44,20 +45,35 @@ app.get('/api/add-listener', async (req, res) => {
             const roscaGroup = new ethers.Contract(groupAddress, RoscaGroup.abi, provider);
             const groupDetails = await (roscaGroup.connect(signer) as any).getGroupDetails();
             console.log(groupDetails);
-            const groupMembers = await (roscaGroup.connect(signer) as any).getMembers();
 
             roscaGroup.addListener('GroupStarted', async (timestamp: any) => {
+            const groupMembers = await (roscaGroup.connect(signer) as any).getMembers();
                 console.log("Group started", parseInt(chain), groupAddress);
+                let safeAddress = ethers.ZeroAddress;
+                if (parseInt(chain) === 84531) {
+                    const ethAdapterOwner1 = new EthersAdapter({
+                        ethers,
+                        signerOrProvider: signer
+                    })
+                    const safeAccountConfig: SafeAccountConfig = {
+                        owners: groupMembers,
+                        threshold: Math.ceil(groupMembers.length / 2),
+                    }
+                    const safeFactory = await SafeFactory.create({ ethAdapter: ethAdapterOwner1 })
+                    const safeSdk = await safeFactory.deploySafe({ safeAccountConfig })
+                    safeAddress = await safeSdk.getAddress()
+                }
                 const created_at = new Date().toISOString();
                 const { data, error } = await supabase
                 .from('groups')
-                .insert([{ 
-                    chain: parseInt(chain), 
-                    group: groupDetails.id, 
-                    address: groupAddress, 
-                    amount: parseInt(ethers.formatEther(groupDetails.amount)), 
-                    members: groupMembers, 
-                    created_at 
+                .insert([{
+                    chain: parseInt(chain),
+                    group: groupDetails.id,
+                    address: groupAddress,
+                    amount: parseInt(ethers.formatEther(groupDetails.amount)),
+                    members: groupMembers,
+                    created_at,
+                    safe: safeAddress
                 }]);
             });
             roscaGroup.addListener('RoundStarted', async (round: any, timestamp: any) => {
@@ -68,7 +84,7 @@ app.get('/api/add-listener', async (req, res) => {
         console.log(error);
         return res.status(500);
     }
-});    
+});
 
 app.get('/api/get-groups', async (req, res) => {
     try {
@@ -91,7 +107,7 @@ app.get('/api/get-group', async (req, res) => {
       const { chain, group } = req.query as any;
       if (!chain) throw new Error('Chain not specified');
       if (!group) throw new Error('Group ID not specified');
-  
+
       const { data, error } = await supabase
         .from('groups')
         .select('*')
@@ -113,7 +129,7 @@ app.post('/api/place-bid', async (req, res) => {
       if (!round) throw new Error('Round not specified');
       if (!member) throw new Error('Member not specified');
       if (!bid_hash) throw new Error('Bid hash not specified');
-  
+
       const { data, error } = await supabase
         .from('bids')
         .insert([{ chain, group, round, member, bid_hash }]);
@@ -133,7 +149,7 @@ app.post('/api/reveal-bid', async (req, res) => {
       if (!round) throw new Error('Round not specified');
       if (!member) throw new Error('Member not specified');
       if (!bid) throw new Error('Bid not specified');
-  
+
       const { data, error } = await supabase
         .from('bids')
         .update({ bid })

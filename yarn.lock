@@ -1614,6 +1614,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@coincollab/backend@workspace:packages/backend"
   dependencies:
+    "@safe-global/api-kit": ^2.0.0
+    "@safe-global/protocol-kit": ^2.0.0
+    "@safe-global/safe-core-sdk-types": ^3.0.1
     "@supabase/supabase-js": ^2.39.0
     "@types/cors": ^2
     "@types/express": ^4
@@ -4249,7 +4252,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/hashes@npm:1.3.2, @noble/hashes@npm:^1.3.1, @noble/hashes@npm:~1.3.0, @noble/hashes@npm:~1.3.1, @noble/hashes@npm:~1.3.2":
+"@noble/hashes@npm:1.3.2, @noble/hashes@npm:^1.3.1, @noble/hashes@npm:^1.3.2, @noble/hashes@npm:~1.3.0, @noble/hashes@npm:~1.3.1, @noble/hashes@npm:~1.3.2":
   version: 1.3.2
   resolution: "@noble/hashes@npm:1.3.2"
   checksum: fe23536b436539d13f90e4b9be843cc63b1b17666a07634a2b1259dded6f490be3d050249e6af98076ea8f2ea0d56f578773c2197f2aa0eeaa5fba5bc18ba474
@@ -4967,6 +4970,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@safe-global/api-kit@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@safe-global/api-kit@npm:2.0.0"
+  dependencies:
+    "@safe-global/protocol-kit": ^2.0.0
+    "@safe-global/safe-core-sdk-types": ^3.0.0
+    ethers: ^6.7.1
+    node-fetch: ^2.7.0
+  checksum: 43286fa389c760afd8fd70c4c3fb267b594a7c9cc1cd2b154ca26d2165dc3ac5b90c2de7dcdaed4155dd32fa49c630df06f2c9e1dcc0593c91fe161aa5cb5e4b
+  languageName: node
+  linkType: hard
+
+"@safe-global/protocol-kit@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@safe-global/protocol-kit@npm:2.0.0"
+  dependencies:
+    "@noble/hashes": ^1.3.2
+    "@safe-global/safe-deployments": ^1.28.0
+    ethereumjs-util: ^7.1.5
+    ethers: ^6.7.1
+    semver: ^7.5.4
+    web3: ^1.10.3
+    web3-core: ^1.10.3
+    web3-utils: ^1.10.3
+  checksum: 07c3dbc17946b42d96c8b89423dab48eeebac4502bb3f06b5eae581d6751373d73daf3b23f2b2cbdad015270042ae36d5735dad5643c47e2103d8ffafaaa53b8
+  languageName: node
+  linkType: hard
+
 "@safe-global/safe-apps-provider@npm:^0.17.1":
   version: 0.17.1
   resolution: "@safe-global/safe-apps-provider@npm:0.17.1"
@@ -5010,6 +5041,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@safe-global/safe-core-sdk-types@npm:^3.0.0, @safe-global/safe-core-sdk-types@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@safe-global/safe-core-sdk-types@npm:3.0.1"
+  dependencies:
+    "@safe-global/safe-deployments": ^1.28.0
+    ethers: ^6.7.1
+    web3-core: ^1.10.3
+    web3-utils: ^1.10.3
+  checksum: ba0df38ba497ec7b1c9f0e40d2f0fc5d9bf7b07e77a82887683ff907e4e8f4cafc600356cb79fa6af03953f27f7661d631581978d570c9b0bcff4f3d0feb14c1
+  languageName: node
+  linkType: hard
+
 "@safe-global/safe-core-sdk-utils@npm:^1.7.4":
   version: 1.7.4
   resolution: "@safe-global/safe-core-sdk-utils@npm:1.7.4"
@@ -5021,7 +5064,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@safe-global/safe-deployments@npm:^1.20.2":
+"@safe-global/safe-deployments@npm:^1.20.2, @safe-global/safe-deployments@npm:^1.28.0":
   version: 1.28.0
   resolution: "@safe-global/safe-deployments@npm:1.28.0"
   dependencies:
@@ -14284,7 +14327,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:^6.9.0":
+"ethers@npm:^6.7.1, ethers@npm:^6.9.0":
   version: 6.9.0
   resolution: "ethers@npm:6.9.0"
   dependencies:
@@ -21586,7 +21629,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.2.0, node-fetch@npm:^2.3.0, node-fetch@npm:^2.6.0, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.6, node-fetch@npm:^2.6.7, node-fetch@npm:^2.6.9":
+"node-fetch@npm:^2.2.0, node-fetch@npm:^2.3.0, node-fetch@npm:^2.6.0, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.6, node-fetch@npm:^2.6.7, node-fetch@npm:^2.6.9, node-fetch@npm:^2.7.0":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:
@@ -28650,7 +28693,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-core@npm:1.10.3, web3-core@npm:^1.8.1":
+"web3-core@npm:1.10.3, web3-core@npm:^1.10.3, web3-core@npm:^1.8.1":
   version: 1.10.3
   resolution: "web3-core@npm:1.10.3"
   dependencies:
@@ -29033,7 +29076,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-utils@npm:1.10.3, web3-utils@npm:^1.8.1":
+"web3-utils@npm:1.10.3, web3-utils@npm:^1.10.3, web3-utils@npm:^1.8.1":
   version: 1.10.3
   resolution: "web3-utils@npm:1.10.3"
   dependencies:
@@ -29080,7 +29123,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3@npm:^1.6.0":
+"web3@npm:^1.10.3, web3@npm:^1.6.0":
   version: 1.10.3
   resolution: "web3@npm:1.10.3"
   dependencies:
