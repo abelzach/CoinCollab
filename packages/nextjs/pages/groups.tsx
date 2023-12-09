@@ -3,13 +3,21 @@ import img from '../public/background.jpg';
 import Image from 'next/image'
 import avatar from '../public/avatar.png';
 import { useRouter } from 'next/router';
+import React from 'react';
 
 export default function Home() {
   const groupsData = [
-    { groupName: 'Group 1', groupID: '1', sipAmount: '$100', duration: '12 months', members: '4' },
-    { groupName: 'Group 2', groupID: '2', sipAmount: '$150', duration: '24 months', members: '6' },
-     { groupName: 'Group 3', groupID: '3', sipAmount: '$350', duration: '24 months', members: '6' }
+    { groupName: 'Group 1', groupID: '1', sipAmount: 100, duration: '12 months', members: '4' },
+    { groupName: 'Group 2', groupID: '2', sipAmount: 150, duration: '24 months', members: '6' },
+     { groupName: 'Group 3', groupID: '3', sipAmount: 350, duration: '24 months', members: '6' }
   ];
+
+  const [rangeValue, setRangeValue] = React.useState(50);
+  const handleRangeChange = (event) => {
+    const newValue = event.target.value;
+    setRangeValue(newValue);
+    console.log('Range value:', rangeValue*10);
+  };
 
   const router = useRouter();
 
@@ -36,9 +44,18 @@ export default function Home() {
         {/* <h2 className="mt-10 animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent ml-72 mb-10 text-5xl font-extrabold tracking-tight text-gray-900 md:text-4xl lg:text-5xl ">Welcome to ROSCA DApp</h2> */}
         <h2 className="ml-72 pt-4 text-4xl font-bold dark:text-white">Open Groups</h2>
         <center>
+          <input
+          type="range"
+          className="transparent h-1.5 w-3/5  cursor-pointer appearance-none rounded-lg border-transparent bg-neutral-200"
+          id="customRange1"
+          value={rangeValue}
+          onChange={handleRangeChange}
+        />
         <div className=' mt-4'>
           {groupsData.map((group, index) => (
-        <div key={index} tabIndex={0} className=" shadow-xl collapse collapse-arrow border border-gray-100 bg-gray-400 backdrop-filter backdrop-blur-sm bg-opacity-20 w-3/5 mb-4">
+             <React.Fragment key={index}>
+          { group.sipAmount < rangeValue*10 && (
+        <div key={index} tabIndex={0} className=" shadow-xl collapse collapse-open border border-gray-100 bg-gray-400 backdrop-filter backdrop-blur-sm bg-opacity-20 w-3/5 mb-4">
           <input type="checkbox" /> 
             <div className="collapse-title text-xl font-medium">
               {group.groupName}
@@ -112,7 +129,8 @@ export default function Home() {
               </div>
             </div>
           </div>
-
+         )}
+         </React.Fragment>
          )) }
         </div>
       </center>
