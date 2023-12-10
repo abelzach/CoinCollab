@@ -33,7 +33,7 @@ export default function Home() {
       functionName: 'getCurrentRoundStage',
   });
 
-  const { writeApprove, isLoading: isLoading2, isMining } = useScaffoldContractWrite({
+  const { data:data1, isLoading: isLoading2, isSuccess:success, write } = useScaffoldContractWrite({
     contractName: "Stablecoin",
     functionName: "approve",
     args: [groupAddressValue, BigInt(1000*10**18)],
@@ -124,13 +124,15 @@ export default function Home() {
                         </svg>
                         <h2 className="text-gray-900 dark:text-white text-3xl font-bold mb-2">Collection stage</h2>
                         <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">Monthly contribution : ${parseInt(group?.amount.toString()) / 10**18}</p>
-                            {/* <button className="btn btn-neutral sm:btn-sm md:btn-md lg:btn-lg">Pay ${parseInt(group?.amount.toString()) / 10**18}</button> */}
-                        <a href="#_" className="relative inline-flex items-center justify-start inline-block px-5 py-3 overflow-hidden font-bold rounded-full group">
+                        <div className='flex flex-row items-center justify-center'>
+                            <button onClick={() => write()} className="btn btn-neutral btn-md">Approve</button>
+                        <a href="#_" className="ml-4 relative inline-flex items-center justify-start inline-block px-5 py-3 overflow-hidden font-bold rounded-full group">
                         <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
                         <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-white opacity-100 group-hover:-translate-x-8"></span>
                         <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-gray-900" onClick={() => writeContribute()}>Pay ${parseInt(group?.amount.toString()) / 10**18}</span>
                         <span className="absolute inset-0 border-2 border-white rounded-full"></span>
                         </a>
+                        </div>
                     </div>
                     : roundStage === 2 ?
                     <div className="border-gray-100 shadow-xl bg-gray-400 backdrop-filter backdrop-blur-sm bg-opacity-30 rounded-lg p-8 md:p-12">
