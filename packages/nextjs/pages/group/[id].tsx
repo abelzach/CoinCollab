@@ -32,6 +32,7 @@ export default function Home() {
       abi: RoscaGroup.abi,
       functionName: 'getCurrentRoundStage',
   });
+  // let roundStage = 2
 
   const { data:data1, isLoading: isLoading2, isSuccess:success, write } = useScaffoldContractWrite({
     contractName: "Stablecoin",
