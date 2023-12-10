@@ -27,12 +27,12 @@ export default function Home() {
       functionName: 'getGroupDetails',
   });
 
-  const { data: roundStage, isError: isError1, isLoading: isLoading1 } = useContractRead({
-      address: groupAddressValue,
-      abi: RoscaGroup.abi,
-      functionName: 'getCurrentRoundStage',
-  });
-  // let roundStage = 2
+  // const { data: roundStage, isError: isError1, isLoading: isLoading1 } = useContractRead({
+  //     address: groupAddressValue,
+  //     abi: RoscaGroup.abi,
+  //     functionName: 'getCurrentRoundStage',
+  // });
+  let roundStage = 2
 
   const { data:data1, isLoading: isLoading2, isSuccess:success, write } = useScaffoldContractWrite({
     contractName: "Stablecoin",
@@ -187,9 +187,9 @@ export default function Home() {
                           <tr>
                             <th>1</th>
                             <td>Goerli</td>
-                            <td>Gang</td>
+                            <td>1</td>
                             <th>8</th>
-                            <td>Jake</td>
+                            <td>0xc5a5...</td>
                             <td>$450</td>
                           </tr>
                           
